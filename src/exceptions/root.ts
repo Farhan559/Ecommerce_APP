@@ -23,6 +23,7 @@ export class HttpException extends Error{
         USER_ALREADY_EXITS = 1002,
         INCORRECT_PASSWORD = 1003,
         UNPROCESSABLE_ENTITY = 2001,
+        INTERNAL_EXCEPTION = 3001
 
     }
     

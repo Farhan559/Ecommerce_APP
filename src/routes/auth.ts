@@ -1,11 +1,11 @@
 import {Router} from 'express';
 import { signup ,login } from '../controllers/auth';
-import { PrismaClient } from '@prisma/client';
+import { errorHandler } from '../errorHandler';
 
 const authRoutes:Router = Router();
 
-authRoutes.post('/signup',signup);
-authRoutes.post('/login',login)
+authRoutes.post('/signup', errorHandler(signup) );
+authRoutes.post('/login', errorHandler(login))
 
 
 

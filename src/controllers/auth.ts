@@ -9,34 +9,28 @@ import { UnprocessableEntity } from '../exceptions/validation';
 import { SignUpSchema } from '../schema/users';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // Validate the request body
-    SignUpSchema.parse(req.body);
+  SignUpSchema.parse(req.body);
 
-    const { email, password, name } = req.body;
+  const { email, password, name } = req.body;
 
-    // Check if the user already exists
-    let user = await prismaClient.user.findFirst({ where: { email } });
-    if (user) {
-      return next(new BadRequestsException('User already exists', ErrorCode.USER_ALREADY_EXITS));
-    }
-
-    // Hash the password and create the new user
-    const hashedPassword = hashSync(password, 10);
-    user = await prismaClient.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword
-      }
-    });
-
-    // Respond with the created user data
-    res.status(201).json(user);
-  } catch (err: any) {
-    // Handle validation errors
-    next(new UnprocessableEntity(err?.issues, 'Unprocessable entity', ErrorCode.UNPROCESSABLE_ENTITY));
+  // Check if the user already exists
+  let user = await prismaClient.user.findFirst({ where: { email } });
+  if (user) {
+    return next(new BadRequestsException('User already exists', ErrorCode.USER_ALREADY_EXITS));
   }
+
+  // Hash the password and create the new user
+  const hashedPassword = hashSync(password, 10);
+  user = await prismaClient.user.create({
+    data: {
+      name,
+      email,
+      password: hashedPassword
+  }
+})
+    // Respond with the created user data
+    res.json(user);
+ 
 };
 
 export const login = async (req: Request, res: Response) => {
