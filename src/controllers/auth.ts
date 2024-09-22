@@ -7,6 +7,7 @@ import { BadRequestsException } from '../exceptions/badRequest';
 import { ErrorCode } from '../exceptions/root';
 import { UnprocessableEntity } from '../exceptions/validation';
 import { SignUpSchema } from '../schema/users';
+import { NotFoundException } from '../exceptions/not-found';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   SignUpSchema.parse(req.body);
@@ -16,7 +17,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   // Check if the user already exists
   let user = await prismaClient.user.findFirst({ where: { email } });
   if (user) {
-    return next(new BadRequestsException('User already exists', ErrorCode.USER_ALREADY_EXITS));
+    new BadRequestsException('User already exists', ErrorCode.USER_ALREADY_EXITS);
   }
 
   // Hash the password and create the new user
@@ -39,12 +40,12 @@ export const login = async (req: Request, res: Response) => {
   // Find the user by email
   const user = await prismaClient.user.findUnique({ where: { email } });
   if (!user) {
-    return res.status(404).send('User does not exist');
+    throw new NotFoundException('User not found',ErrorCode.USER_NOT_FOUND);
   }
 
   // Check if the provided password is correct
   if (!compareSync(password, user.password)) {
-    return res.status(400).send('Incorrect password');
+    throw new BadRequestsException('Incorrect Password',ErrorCode.INCORRECT_PASSWORD)
   }
 
   // Generate a JWT token
