@@ -4,6 +4,7 @@ import { ErrorCode } from "../exceptions/root";
 import * as jwt from 'jsonwebtoken';
 import { JWT_SECRET } from "../secrets";
 import { prismaClient } from "..";
+import { User } from "@prisma/client"; // Import your User type
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -29,7 +30,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
         }
 
         // 5. Attach the user to the current request object
-        (req as any).user = user;
+        req.user = user; // No need for 'as any' now
 
         // Continue to the next middleware or route handler
         next();

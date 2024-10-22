@@ -3,7 +3,7 @@ import authRoutes from "./auth";
 
 
 const rootRouter: Router = Router();
-
+//Auth routes
 rootRouter.use('/auth',authRoutes); 
 
 

@@ -8,11 +8,11 @@
     "skipLibCheck": true,
     "typeRoots": [
       "./node_modules/@types",
-      "./src/types" // Add your custom types path here
+      "./src/types" // This is your custom types path
     ]
   },
   "include": [
-    "src/**/*",
-    "src/types/**/*" // Include your types path here
+    "src/**/*", // Include all source files
+    "types/**/*" // Include your custom types directory
   ]
 }
